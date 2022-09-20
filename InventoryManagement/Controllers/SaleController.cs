@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using InventoryManagement.Models;
 
 namespace InventoryManagement.Controllers
 {
@@ -39,13 +37,26 @@ namespace InventoryManagement.Controllers
             if (ModelState.IsValid)
             {
                 Purchase pro = Db.Purchases.Where(x => x.Purchase_Product == product.Sale_Product).SingleOrDefault();
+                Sale pr = Db.Sales.Where(x => x.Sale_Product == product.Sale_Product).SingleOrDefault();
                 if (Convert.ToInt32(product.Sale_Qnty) <= Convert.ToInt32(pro.Purchase_Qnty))
                 {
                     product.Sale_Date = DateTime.Now;
-                    Db.Sales.Add(product);
-                    pro.Purchase_Qnty = (Convert.ToInt32(pro.Purchase_Qnty) - Convert.ToInt32(product.Sale_Qnty)).ToString();
-                    Db.SaveChanges();
-                    return RedirectToAction("DisplayPurchase");
+                    if (pr != null)
+                    {
+                        if (pr.Sale_Product == product.Sale_Product)
+                        {
+                            pr.Sale_Qnty = (Convert.ToInt32(pr.Sale_Qnty) + Convert.ToInt32(product.Sale_Qnty)).ToString();
+                            Db.SaveChanges();
+                            return RedirectToAction("DisplaySale");
+                        }
+                    }
+                    else
+                    {
+                        Db.Sales.Add(product);
+                        pro.Purchase_Qnty = (Convert.ToInt32(pro.Purchase_Qnty) - Convert.ToInt32(product.Sale_Qnty)).ToString();
+                        Db.SaveChanges();
+                        return RedirectToAction("DisplaySale");
+                    }
                 }
                 else
                 {
@@ -86,7 +97,7 @@ namespace InventoryManagement.Controllers
             Sale product = Db.Sales.Where(x => x.Product_ID == id).SingleOrDefault();
             Db.Sales.Remove(product);
             Db.SaveChanges();
-            return RedirectToAction("DisplayPurchase");
+            return RedirectToAction("DisplaySale");
         }
     }
 }
