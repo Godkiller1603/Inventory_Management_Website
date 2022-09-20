@@ -41,13 +41,16 @@ namespace InventoryManagement.Controllers
                 if (Convert.ToInt32(product.Purchase_Qnty) <= Convert.ToInt32(pro.Product_Qnty))
                 {
                     product.Purchase_Date = DateTime.Now;
-                    if (pr != null)
+                    if (pro.Product_Name == product.Purchase_Product)
                     {
-                        if (pr.Purchase_Product == product.Purchase_Product)
+                        if (pr != null)
                         {
-                            pr.Purchase_Qnty = (Convert.ToInt32(pr.Purchase_Qnty) + Convert.ToInt32(product.Purchase_Qnty)).ToString();
-                            Db.SaveChanges();
-                            return RedirectToAction("DisplaySale");
+                            if (pr.Purchase_Product == product.Purchase_Product)
+                            {
+                                pr.Purchase_Qnty = (Convert.ToInt32(pr.Purchase_Qnty) + Convert.ToInt32(product.Purchase_Qnty)).ToString();
+                                Db.SaveChanges();
+                                return RedirectToAction("DisplayPurchase");
+                            }
                         }
                         else
                         {
