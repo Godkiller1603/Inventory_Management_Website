@@ -49,13 +49,18 @@ namespace InventoryManagement.Controllers
                             Db.SaveChanges();
                             return RedirectToAction("DisplaySale");
                         }
+                        else
+                        {
+                            Db.Sales.Add(product);
+                            pro.Purchase_Qnty = (Convert.ToInt32(pro.Purchase_Qnty) - Convert.ToInt32(product.Sale_Qnty)).ToString();
+                            Db.SaveChanges();
+                            return RedirectToAction("DisplaySale");
+                        }
                     }
                     else
                     {
-                        Db.Sales.Add(product);
-                        pro.Purchase_Qnty = (Convert.ToInt32(pro.Purchase_Qnty) - Convert.ToInt32(product.Sale_Qnty)).ToString();
-                        Db.SaveChanges();
-                        return RedirectToAction("DisplaySale");
+                        ViewBag.Message = "Product quantity unavailable..";
+                        return View();
                     }
                 }
                 else

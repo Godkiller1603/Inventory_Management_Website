@@ -37,13 +37,32 @@ namespace InventoryManagement.Controllers
             if (ModelState.IsValid)
             {
                 Product pro = Db.Products.Where(x => x.Product_Name == product.Purchase_Product).SingleOrDefault();
+                Purchase pr = Db.Purchases.Where(x => x.Purchase_Product== product.Purchase_Product).SingleOrDefault();
                 if (Convert.ToInt32(product.Purchase_Qnty) <= Convert.ToInt32(pro.Product_Qnty))
                 {
                     product.Purchase_Date = DateTime.Now;
-                    Db.Purchases.Add(product);
-                    pro.Product_Qnty = (Convert.ToInt32(pro.Product_Qnty) - Convert.ToInt32(product.Purchase_Qnty)).ToString();
-                    Db.SaveChanges();
-                    return RedirectToAction("DisplayPurchase");
+                    if (pr != null)
+                    {
+                        if (pr.Purchase_Product == product.Purchase_Product)
+                        {
+                            pr.Purchase_Qnty = (Convert.ToInt32(pr.Purchase_Qnty) + Convert.ToInt32(product.Purchase_Qnty)).ToString();
+                            Db.SaveChanges();
+                            return RedirectToAction("DisplaySale");
+                        }
+                        else
+                        {
+                            Db.Purchases.Add(product);
+                            pro.Product_Qnty = (Convert.ToInt32(pro.Product_Qnty) - Convert.ToInt32(product.Purchase_Qnty)).ToString();
+                            Db.SaveChanges();
+                            return RedirectToAction("DisplayPurchase");
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Product quantity unavailable..";
+                        return View();
+                    }
+
                 }
                 else
                 {
