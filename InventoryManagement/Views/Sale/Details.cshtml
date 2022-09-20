@@ -1,0 +1,42 @@
+﻿@model InventoryManagement.Models.Sale
+
+@{
+    ViewBag.Title = "Details | Inventory Management";
+}
+
+<h2>Details of sold product</h2>
+
+<div>
+    <h4>Sale</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("Sold Product")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sale_Product)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Sold Quantity")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sale_Qnty)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Sold Date")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sale_Date)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "EditProduct", new { id = Model.Product_ID }, new {@class="btn btn-danger"}) |
+    @Html.ActionLink("Back to Products", "DisplaySale")
+</p>
