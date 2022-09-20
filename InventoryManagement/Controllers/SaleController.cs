@@ -38,16 +38,20 @@ namespace InventoryManagement.Controllers
             {
                 Purchase pro = Db.Purchases.Where(x => x.Purchase_Product == product.Sale_Product).SingleOrDefault();
                 Sale pr = Db.Sales.Where(x => x.Sale_Product == product.Sale_Product).SingleOrDefault();
-                if (Convert.ToInt32(product.Sale_Qnty) <= Convert.ToInt32(pro.Purchase_Qnty))
+                if (pro != null && Convert.ToInt32(pro.Purchase_Qnty) != 0)
                 {
-                    product.Sale_Date = DateTime.Now;
-                    if (pr != null)
+                    if (Convert.ToInt32(product.Sale_Qnty) <= Convert.ToInt32(pro.Purchase_Qnty))
                     {
-                        if (pr.Sale_Product == product.Sale_Product)
+                        product.Sale_Date = DateTime.Now;
+                        if (pr != null)
                         {
-                            pr.Sale_Qnty = (Convert.ToInt32(pr.Sale_Qnty) + Convert.ToInt32(product.Sale_Qnty)).ToString();
-                            Db.SaveChanges();
-                            return RedirectToAction("DisplaySale");
+                            if (pr.Sale_Product == product.Sale_Product)
+                            {
+                                pr.Sale_Qnty = (Convert.ToInt32(pr.Sale_Qnty) + Convert.ToInt32(product.Sale_Qnty)).ToString();
+                                pro.Purchase_Qnty = (Convert.ToInt32(pro.Purchase_Qnty) - Convert.ToInt32(product.Sale_Qnty)).ToString();
+                                Db.SaveChanges();
+                                return RedirectToAction("DisplaySale");
+                            }
                         }
                         else
                         {
@@ -56,18 +60,20 @@ namespace InventoryManagement.Controllers
                             Db.SaveChanges();
                             return RedirectToAction("DisplaySale");
                         }
+
                     }
                     else
                     {
-                        ViewBag.Message = "Product quantity unavailable..";
+                        ViewBag.Message = "Selected quantity more than available quantity..";
                         return View();
                     }
                 }
                 else
                 {
-                    ViewBag.Message = "Selected quantity more than available quantity..";
+                    ViewBag.Message = "Product unavailable..";
                     return View();
                 }
+                
             }
             return View();
         }

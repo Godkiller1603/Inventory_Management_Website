@@ -38,16 +38,16 @@ namespace InventoryManagement.Controllers
             {
                 Product pro = Db.Products.Where(x => x.Product_Name == product.Purchase_Product).SingleOrDefault();
                 Purchase pr = Db.Purchases.Where(x => x.Purchase_Product== product.Purchase_Product).SingleOrDefault();
-                if (Convert.ToInt32(product.Purchase_Qnty) <= Convert.ToInt32(pro.Product_Qnty))
+                if (pro != null && Convert.ToInt32(pro.Product_Qnty) != 0)
                 {
-                    product.Purchase_Date = DateTime.Now;
-                    if (pro.Product_Name == product.Purchase_Product)
+                    if (Convert.ToInt32(product.Purchase_Qnty) <= Convert.ToInt32(pro.Product_Qnty))
                     {
                         if (pr != null)
                         {
                             if (pr.Purchase_Product == product.Purchase_Product)
                             {
                                 pr.Purchase_Qnty = (Convert.ToInt32(pr.Purchase_Qnty) + Convert.ToInt32(product.Purchase_Qnty)).ToString();
+                                pro.Product_Qnty = (Convert.ToInt32(pro.Product_Qnty) - Convert.ToInt32(product.Purchase_Qnty)).ToString();
                                 Db.SaveChanges();
                                 return RedirectToAction("DisplayPurchase");
                             }
@@ -62,16 +62,17 @@ namespace InventoryManagement.Controllers
                     }
                     else
                     {
-                        ViewBag.Message = "Product quantity unavailable..";
+                        ViewBag.Message = "Selected quantity more than available quantity..";
                         return View();
                     }
-
                 }
                 else
                 {
-                    ViewBag.Message = "Selected quantity more than available quantity..";
+                    ViewBag.Message = "Product unavailable..";
                     return View();
                 }
+
+
             }
             return View();
         }
