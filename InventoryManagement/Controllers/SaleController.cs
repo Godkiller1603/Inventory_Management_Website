@@ -42,16 +42,13 @@ namespace InventoryManagement.Controllers
                 {
                     if (Convert.ToInt32(product.Sale_Qnty) <= Convert.ToInt32(pro.Purchase_Qnty))
                     {
-                        product.Sale_Date = DateTime.Now;
+                        product.Sale_Date = DateTime.Now.ToString();
                         if (pr != null)
                         {
-                            if (pr.Sale_Product == product.Sale_Product)
-                            {
                                 pr.Sale_Qnty = (Convert.ToInt32(pr.Sale_Qnty) + Convert.ToInt32(product.Sale_Qnty)).ToString();
                                 pro.Purchase_Qnty = (Convert.ToInt32(pro.Purchase_Qnty) - Convert.ToInt32(product.Sale_Qnty)).ToString();
                                 Db.SaveChanges();
                                 return RedirectToAction("DisplaySale");
-                            }
                         }
                         else
                         {

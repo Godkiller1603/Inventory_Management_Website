@@ -17,7 +17,9 @@
                     <asp:BoundField DataField="Purchase_Date" HeaderText="Purchased Date"><ItemStyle HorizontalAlign="Center" /></asp:BoundField>
                 </Columns>
             </asp:GridView>
-            <h4 style="text-align:center">Totol Records : <asp:TextBox ID="TextBox1" runat="server" ></asp:TextBox></h4>
+            <h4 style="text-align:center">Totol Records : <asp:TextBox ID="TextBox1" runat="server" BorderStyle="None" ></asp:TextBox>
+                <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Back" />
+            </h4>
         </div>
     </form>
 </body>

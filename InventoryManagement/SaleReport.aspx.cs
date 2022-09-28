@@ -23,5 +23,10 @@ namespace InventoryManagement
             SReport.PageIndex = e.NewPageIndex;
             SReport.DataBind();
         }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("/Sale/DisplaySale");
+        }
     }
 }

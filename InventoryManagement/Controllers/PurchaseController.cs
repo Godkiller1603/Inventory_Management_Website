@@ -42,15 +42,13 @@ namespace InventoryManagement.Controllers
                 {
                     if (Convert.ToInt32(product.Purchase_Qnty) <= Convert.ToInt32(pro.Product_Qnty))
                     {
+                        product.Purchase_Date = DateTime.Now.ToString();
                         if (pr != null)
                         {
-                            if (pr.Purchase_Product == product.Purchase_Product)
-                            {
                                 pr.Purchase_Qnty = (Convert.ToInt32(pr.Purchase_Qnty) + Convert.ToInt32(product.Purchase_Qnty)).ToString();
                                 pro.Product_Qnty = (Convert.ToInt32(pro.Product_Qnty) - Convert.ToInt32(product.Purchase_Qnty)).ToString();
                                 Db.SaveChanges();
                                 return RedirectToAction("DisplayPurchase");
-                            }
                         }
                         else
                         {
@@ -93,6 +91,13 @@ namespace InventoryManagement.Controllers
             pr.Purchase_Qnty=product.Purchase_Qnty;
             Db.SaveChanges();
             return RedirectToAction("DisplayPurchase");
+        }
+
+        [HttpGet]
+        public ActionResult Details(int ID)
+        {
+            Purchase product = Db.Purchases.Where(x => x.Product_ID == ID).SingleOrDefault();
+            return View(product);
         }
         [HttpGet]
         public ActionResult Delete(int id)
